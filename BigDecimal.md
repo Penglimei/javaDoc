@@ -1,9 +1,10 @@
 # BigDecimal
 ## 用处
-**浮点数之间的等值判断，基本数据类型不能用 == 来比较，包装数据类型不能用 equals 来判断，具体原理和浮点数的编码方式有关。
-使用 BigDecimal 来定义浮点数的值，再进行浮点数的运算操作。**
+**浮点数之间的等值判断，基本数据类型不能用 == 来比较，包装数据类型不能用 equals 来判断，具体原理和浮点数的编码方式有关。  
+应使用 BigDecimal 来定义浮点数的值，再进行浮点数的运算操作。**
 ### 浮点数的编码方式
 >> 在计算机系统理论中，浮点数采用 IEEE 754 标准表示，编码方式是 sign+exponent+fraction。 
+>>> ![浮点数编码方式](https://upload-images.jianshu.io/upload_images/1820210-61af804d90504fc0.jpg?imageMogr2/auto-orient/strip|imageView2/2/format/webp)  
 >>> 符号位（sign）占用 1 位，用来表示正负数，0 表示正数，1 表示负数  
 >>> 指数位（exponent）占用 8 位，用来表示指数，实际要加上偏移量  
 >>> 小数位（fraction）占用 23 位，用来表示小数，不足位数补 0  
@@ -43,4 +44,4 @@ System.out.println(n);// 1.255
 
 
 
-> 引用自 Snailclimb/JavaGuide 
+## 引用自 Snailclimb/JavaGuide 
