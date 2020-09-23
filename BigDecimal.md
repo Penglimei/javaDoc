@@ -41,7 +41,8 @@ System.out.println(n);// 1.255
 ```
 ## 注意事项
 ***使用BigDecimal时，为了防止精度丢失，推荐使用它的 BigDecimal(String) 构造方法来创建对象。***
-
-
+## 总结
+BigDecimal 主要用来操作（大）浮点数，BigInteger 主要用来操作大整数（超过 long 类型）。  
+BigDecimal 的实现利用到了 BigInteger, 所不同的是 BigDecimal 加入了小数位的概念
 
 ## 引用自 Snailclimb/JavaGuide 
