@@ -14,7 +14,7 @@ public ReentrantLock(boolean fair) {
 }
 ```
 
->>> 非公平锁  
+>>> 公平锁  
 ```java
 static final class FairSync extends Sync {
     final void lock() {
@@ -49,7 +49,7 @@ static final class FairSync extends Sync {
 }
 ```
 
->>> 公平锁  
+>>> 非公平锁  
 ```java
 static final class NonfairSync extends Sync {
     final void lock() {
