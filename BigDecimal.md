@@ -13,7 +13,7 @@
 所以当使用浮点格式来存储数字的时候，实际存储的尾数是被截取或执行舍入后的近似值。
 这就解释了浮点数计算不准确的问题，因为近似值和原值是有差异的。** 
 
-```
+```java
   BigDecimal a = new BigDecimal("1.0");
   BigDecimal b = new BigDecimal("0.9");
   BigDecimal c = new BigDecimal("0.8");
@@ -27,14 +27,14 @@
 ```
 ## 大小比较
 a.compareTo(b) : 返回 -1 表示 a 小于 b，0 表示 a 等于 b ， 1表示 a 大于 b。
-```
+```java
 BigDecimal a = new BigDecimal("1.0");
 BigDecimal b = new BigDecimal("0.9");
 System.out.println(a.compareTo(b));// 1
 ```
 ## 保留小数位
 通过 setScale() 方法设置保留几位小数以及保留规则。
-```
+```java
 BigDecimal m = new BigDecimal("1.255433");
 BigDecimal n = m.setScale(3,BigDecimal.ROUND_HALF_DOWN);
 System.out.println(n);// 1.255
