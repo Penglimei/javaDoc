@@ -69,6 +69,7 @@ public class Main {
 >+ 在调用wait方法之前，线程必须获得该对象的对象级别锁，即`只能在同步方法或同步块中调用wait()方法`。  
 >+ `notify()同wait()方法一样，也需要在同步方法或同步块中调用`，即在调用前，线程也必须获得`该对象的对象级别锁`。  
 >+ wait和notify调用时，如果没有持有适当的锁，将会抛出IllegalMonitorStateException的异常，它是一个RuntimeException的子类。  
+>>+ wait/notify等方法也依赖于monitor对象，这就是为什么只有在同步的块或者方法中才能调用wait/notify等方法，否则会抛出java.lang.IllegalMonitorStateException的异常的原因  
 
 #### wait(long timeout)
 >+ Thread B线程调用wait()方法时，会释放已有的同步锁，因此Thread A 线程可以获取`同一个对象的同步锁synchronized`，执行后续操作。  
