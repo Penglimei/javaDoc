@@ -117,4 +117,62 @@ public class Main {
 ```
 >+ ThreadA、ThreadB、ThreadC、ThreadD使用的都是SyncTest.class的对象实例同步锁，所以会阻塞，只有当一个线程释放锁后被阻塞的线程才能尝试获取同步锁。
 
->+ 修饰静态方法
+>+ 修饰静态方法  
+>>+ 因为静态成员不属于任何一个实例对象，是类成员（ static 表明这是该类的一个静态资源，不管 new 了多少个对象，只有一份）。所以，`如果一个线程 A 调用一个实例对象的非静态 synchronized 方法，而线程 B 需要调用这个实例对象所属类的静态 synchronized 方法，是允许的，不会发生互斥现象`，`因为访问静态 synchronized 方法占用的锁是当前类的锁，而访问非静态 synchronized 方法占用的锁是当前实例对象锁`。  
+```java
+public class Main {
+    static class SyncTest{
+        public synchronized static void methodStaticSyn(){
+            System.out.println(Thread.currentThread().getName()+" into synchronized static function "+System.currentTimeMillis());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread().getName()+" out synchronized static function "+System.currentTimeMillis());
+        }
+
+        public synchronized void methodSyn(){
+            System.out.println(Thread.currentThread().getName()+" into synchronized function "+System.currentTimeMillis());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread().getName()+" out synchronized function "+System.currentTimeMillis());
+        }
+    }
+
+    public static void main(String[] args) {
+        SyncTest syncTest = new SyncTest();
+        new Thread(()->{
+            syncTest.methodSyn();
+        },"ThreadA").start();
+
+        new Thread(()->{
+            syncTest.methodSyn();
+        },"ThreadB").start();
+
+        new Thread(()->{
+            SyncTest.methodStaticSyn();
+        },"ThreadStaticC").start();
+
+        new Thread(()->{
+            SyncTest.methodStaticSyn();
+        },"ThreadStaticD").start();
+    }
+}
+
+/**
+ * 执行结果：
+ *  ThreadA into synchronized function 1601005984201
+ *  ThreadStaticC into synchronized static function 1601005984202
+ *  ThreadStaticC out synchronized static function 1601005985204
+ *  ThreadA out synchronized function 1601005985204
+ *  ThreadStaticD into synchronized static function 1601005985204
+ *  ThreadB into synchronized function 1601005985204
+ *  ThreadStaticD out synchronized static function 1601005986209
+ *  ThreadB out synchronized function 1601005986209
+ */
+```
+> `使用对象锁的ThreadA和使用类锁的ThreadStaticC之间未发生阻塞，但是使用同一把锁的ThreadA和ThreadB，ThreadStaticC和ThreadStaticD，分别产生了阻塞现象。`  
