@@ -96,6 +96,48 @@ ThreadLocalMap getMap(Thread t) {
 }
 ```
 
+>+ ThreadLocalMap的Hash算法  
+>>+ ThreadLocalMap中hash算法，这里i就是当前key在散列表中对应的数组下标位置。  
+>>+ 每当创建一个ThreadLocal对象，这个``ThreadLocal.nextHashCode 这个值就`会增长 0x61c88647 `，
+这个值很特殊，`它是斐波那契数也叫 黄金分割数`。hash增量为 这个数字，带来的`好处就是 hash 分布非常均匀`。  
+```java
+int i = key.threadLocalHashCode & (len-1);
+
+public class ThreadLocal<T> {
+    private final int threadLocalHashCode = nextHashCode();
+
+    private static AtomicInteger nextHashCode = new AtomicInteger();
+
+    private static final int HASH_INCREMENT = 0x61c88647;
+
+    private static int nextHashCode() {
+        return nextHashCode.getAndAdd(HASH_INCREMENT);
+    }
+    
+    static class `ThreadLocalMap` {
+        `ThreadLocalMap`(`ThreadLocal`<?> firstKey, Object firstValue) {
+            table = new Entry[INITIAL_CAPACITY];
+            int i = firstKey.threadLocalHashCode & (INITIAL_CAPACITY - 1);
+
+            table[i] = new Entry(firstKey, firstValue);
+            size = 1;
+            setThreshold(INITIAL_CAPACITY);
+        }
+    }
+}
+```
+
+
+>+ ThreadLocalMap的 Hash冲突   
+>>+ 虽然ThreadLocalMap中使用了黄金分隔数来作为hash计算因子，大大减少了Hash冲突的概率，但是仍然会存在冲突。  
+>>+ 当存入值位置已经存在一个Entry `产生冲突，的就会线性向后查找，一直找到Entry为null的槽位才会停止查找，将当前元素放入此槽`，还存在多种情况讨论。 
+
+>>+ `什么情况下桶才是可以使用的呢？`  
+>>>+ k = key 说明是替换操作，可以使用；  
+>>>+ 碰到一个过期的桶，执行替换逻辑，占用过期桶；  
+>>>+ 查找过程中，碰到桶中Entry=null的情况，直接使用。  
+>>+ [ThreadLocalMap的 Hash冲突](https://github.com/Snailclimb/JavaGuide/blob/master/docs/java/Multithread/ThreadLocal.md)  
+
 >+ ThreadLocal类的get()方法  
 ```java
 public T get() {
